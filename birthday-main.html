@@ -557,11 +557,15 @@
         }
 
         // Initialize arrays
+        const isMobile = window.innerWidth < 768;
+        const numStars = isMobile ? 60 : 200;
+        const numPetals = isMobile ? 15 : 50;
+
         const stars = [];
-        for (let i = 0; i < 200; i++) stars.push(new Star());
+        for (let i = 0; i < numStars; i++) stars.push(new Star());
         
         const petals = [];
-        for (let i = 0; i < 50; i++) petals.push(new Petal());
+        for (let i = 0; i < numPetals; i++) petals.push(new Petal());
         
         const fireworks = [];
         let fireworksInterval;
@@ -654,7 +658,7 @@
         // Start fireworks animation
         function startFireworks() {
             // Regular fireworks
-            fireworksInterval = setInterval(addFirework, 500);
+            fireworksInterval = setInterval(addFirework, window.innerWidth < 768 ? 1200 : 500);
             setTimeout(() => {
                 clearInterval(fireworksInterval);
             }, 5000);

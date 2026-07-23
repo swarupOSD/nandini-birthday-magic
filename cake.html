@@ -389,7 +389,8 @@
     <script>
         function createStars() {
             const container = document.querySelector('.stars');
-            for (let i = 0; i < 100; i++) {
+            const numStars = window.innerWidth < 768 ? 30 : 100;
+            for (let i = 0; i < numStars; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.width = `${Math.random() * 4}px`;
@@ -409,7 +410,7 @@
                 particle.style.left = `${Math.random() * 20 - 10}px`;
                 flame.appendChild(particle);
                 setTimeout(() => particle.remove(), 3000);
-            }, 400);
+            }, window.innerWidth < 768 ? 800 : 400);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
