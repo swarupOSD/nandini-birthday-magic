@@ -1,141 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday 💌</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      height: 100vh;
-      background: linear-gradient(to top right, #ffecf0, #fce4ec);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      overflow: hidden;
-      position: relative;
-    }
-    .card {
-      width: 320px;
-      height: 500px;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      padding: 20px;
-      position: relative;
-      text-align: center;
-      overflow: hidden;
-    }
-    .card h1 {
-      font-size: 24px;
-      color: #e91e63;
-      margin-bottom: 10px;
-    }
-    .card p {
-      font-size: 16px;
-      color: #444;
-      margin-bottom: 20px;
-    }
-    .cake {
-      width: 200px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-    .cake:hover {
-      transform: scale(1.1);
-    }
-    .photo {
-      width: 180px;
-      border-radius: 15px;
-      margin: 10px auto;
-      display: none;
-    }
-    .balloon {
-      position: absolute;
-      top: 0;
-      width: 40px;
-      animation: float 6s infinite;
-    }
-    .balloon:nth-child(1) { left: 20%; animation-delay: 0s; }
-    .balloon:nth-child(2) { left: 40%; animation-delay: 2s; }
-    .balloon:nth-child(3) { left: 60%; animation-delay: 4s; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Sweetest Sister</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    @keyframes float {
-      0% { transform: translateY(100vh); opacity: 0; }
-      30% { opacity: 1; }
-      100% { transform: translateY(-150%); opacity: 0; }
-    }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #0f172a, #312e81, #4c1d95, #1e1b4b);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 20px;
+        }
 
-    .cat {
-      width: 100px;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-    }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    .message {
-      font-size: 18px;
-      color: #880e4f;
-      margin-top: 20px;
-      display: none;
-    }
-  </style>
+        /* Floating Light Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .orb-1 {
+            width: 300px; height: 300px;
+            background: rgba(236, 72, 153, 0.4);
+            top: 10%; left: 10%;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 400px; height: 400px;
+            background: rgba(56, 189, 248, 0.3);
+            bottom: 10%; right: 10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-50px) scale(1.1); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            z-index: 1;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(50px);
+            opacity: 0;
+            display: none; /* Hidden until envelope is opened */
+        }
+
+        .show-card {
+            display: block;
+            animation: slideUp 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Envelope Styles */
+        .envelope-wrapper {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.9);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        .css-envelope-container {
+            text-align: center;
+            cursor: pointer;
+            animation: pulseEnv 2s infinite;
+            perspective: 1000px;
+        }
+
+        .css-envelope {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            margin: 0 auto 40px auto;
+            background: #ff4d85; /* Bright pink back */
+            border-radius: 5px;
+            box-shadow: 0 15px 40px rgba(255, 77, 133, 0.5), inset 0 0 20px rgba(0,0,0,0.1);
+            transform-style: preserve-3d;
+        }
+
+        /* The back of the envelope flap that shows when open */
+        .css-envelope::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #ffebf0; /* White paper inside */
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .env-body {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            border-radius: 5px;
+            z-index: 3;
+        }
+
+        .env-body::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 0 140px 100px 140px;
+            border-color: transparent transparent #ff7eb3 transparent;
+            z-index: 3;
+        }
+
+        .env-body::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 180px 140px 0 140px;
+            border-color: transparent #ff6ba1 transparent #ff6ba1;
+            z-index: 2;
+        }
+
+        .env-flap {
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 110px 140px 0 140px;
+            border-color: #ff3377 transparent transparent transparent;
+            z-index: 4;
+            transform-origin: top;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.15));
+        }
+
+        .env-seal {
+            position: absolute;
+            top: 105px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+            border-radius: 50%;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 2px 3px rgba(255,255,255,0.6);
+            transition: opacity 0.3s ease;
+        }
+
+        .env-seal i {
+            color: #d11149;
+            font-size: 1.3rem;
+            filter: none;
+        }
+        
+        .env-text {  
+            margin-top: 25px; 
+            font-size: 2.2rem; 
+            font-weight: 700; 
+            font-family: 'Dancing Script', cursive;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 10px #ff7eb3, 0 0 20px #ff758c;
+            animation: bounceText 2s infinite;
+        }
+
+        @keyframes bounceText {
+            0%, 100% { transform: translateY(0); text-shadow: 0 0 10px #ff7eb3, 0 0 20px #ff758c; }
+            50% { transform: translateY(-5px); text-shadow: 0 0 20px #ff7eb3, 0 0 30px #ff758c, 0 0 40px #ff7eb3; }
+        }
+
+        @keyframes pulseEnv {
+            0% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.05) translateY(-10px); filter: drop-shadow(0 0 30px rgba(255, 126, 179, 0.8)); }
+            100% { transform: scale(1) translateY(0); }
+        }
+
+        .open-flap .env-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .open-flap .env-seal {
+            opacity: 0;
+        }
+
+        .photo-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px auto;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6);
+            animation: spinBorder 4s linear infinite;
+        }
+
+        @keyframes spinBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 15%; /* Focuses on the face near the top */
+            border-radius: 50%;
+            border: 4px solid #1e1b4b;
+            animation: counterSpin 4s linear infinite;
+        }
+
+        @keyframes counterSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            background: linear-gradient(to right, #f472b6, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+        }
+
+        .message-content {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            color: #f472b6;
+            font-weight: 600;
+        }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #38bdf8;
+            margin-top: 20px;
+        }
+
+        /* Confetti effect */
+        .confetti-piece {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            top: -10px;
+            z-index: 2;
+            animation: fall 5s linear infinite;
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(720deg); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+                align-items: flex-start; /* allow natural scrolling */
+            }
+            .glass-card {
+                padding: 25px 20px;
+                transform: translateY(20px);
+                margin-top: 20px;
+                margin-bottom: 40px;
+            }
+            .photo-container {
+                width: 130px;
+                height: 130px;
+                margin-bottom: 20px;
+            }
+            .title {
+                font-size: 2.2rem;
+                margin-bottom: 15px;
+            }
+            .message-content {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+            .message-content p {
+                margin-bottom: 10px;
+            }
+            .signature {
+                font-size: 1.5rem;
+                margin-top: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- 🎈 Balloons -->
-  <img src="https://i.ibb.co/HBqZ6wB/balloon1.png" class="balloon">
-  <img src="https://i.ibb.co/4dN8ZZs/balloon2.png" class="balloon">
-  <img src="https://i.ibb.co/n0p9LbB/balloon3.png" class="balloon">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-  <!-- 💌 Birthday Card -->
-  <div class="card">
-    <h1>Happy Birthday! 🎉</h1>
-    <p>Click the cake to reveal your surprise! 🍰</p>
-
-    <!-- 🎂 Cake image -->
-    <img src="https://i.ibb.co/1zNP8Bc/birthday-cake.png" alt="cake" class="cake">
-
-    <!-- 🖼️ Hidden photo -->
-    <img src="your-photo.jpg" alt="Your Photo" class="photo" id="photo">
-
-    <!-- 🎊 Message -->
-    <div class="message" id="message">
-      Wishing you all the love and happiness in the world! 💖
+    <!-- Envelope Overlay -->
+    <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="css-envelope-container" id="envelopeBtn">
+            <div class="css-envelope">
+                <div class="env-flap"></div>
+                <div class="env-body"></div>
+                <div class="env-seal"><i class="fa-solid fa-heart"></i></div>
+            </div>
+            <p class="env-text">Tap to Open 💌</p>
+        </div>
     </div>
-  </div>
 
-  <!-- 🐱 Cat gif (corner) -->
-  <img src="cat.gif" alt="cat" class="cat">
+    <div class="glass-card" id="mainCard">
+        <div class="photo-container">
+            <img src="nandini.jpeg" alt="Sister" class="profile-img" onerror="this.src='https://via.placeholder.com/180?text=Your+Photo'">
+        </div>
 
-  <!-- 🔊 Audio -->
-  <audio id="birthdayMusic" loop>
-    <source src="https://raw.githubusercontent.com/swarupOSD/my-sister-birthday/main/birthday_song.mp3" type="audio/mpeg">
-    Your browser does not support the audio tag.
-  </audio>
+        <h1 class="title">Happy Birthday! 🎂</h1>
 
-  <!-- 🔁 Script -->
-  <script>
-    const cake = document.querySelector('.cake');
-    const photo = document.getElementById('photo');
-    const message = document.getElementById('message');
-    const music = document.getElementById('birthdayMusic');
+        <div class="message-content">
+            <p>Dear Nandini, My Sweetest Sister, ❤️</p>
+            <p>Aro ekta bochor kete gelo, and you've grown even more <span class="highlight">amazing!</span> 🌟</p>
+            <p>Tumi hoccho amar ssob theke priyo bon, tomar moto ekjon bon paowa amar kache anek boro ashirbad. ❤️</p>
+            <p style="margin-bottom: 20px;">Tomar shob paglami, tomar oviman, ar tomar ei mishti hashi - eshob chhara amar jibon e kono color nei. 🎨</p>
+            <p>This year, I promise to annoy you even more, but also protect you from every sadness in the world. 🛡️💪</p>
+            <p>No matter where life takes us, remember tomar ei pagol bhai ta always tomar pashe chhayar moto thakbe! 🤞💖</p>
+            <p style="margin-bottom: 20px;">Keep smiling, because your smile is my biggest strength! 😊</p>
+            <p>Love you to the moon and back, sis! 💌💝</p>
+        </div>
 
-    cake.addEventListener('click', () => {
-      photo.style.display = 'block';
-      message.style.display = 'block';
+        <div class="signature">
+            ~ Tomar ador er bhai 🧑‍💻❤
+        </div>
+    </div>
 
-      // 🎵 Play music on first interaction (mobile-friendly)
-      music.play().catch((e) => {
-        console.log("Mobile gesture required:", e);
-      });
-    });
-  </script>
+    <script>
+        // Envelope logic
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        const envelopeBtn = document.getElementById('envelopeBtn');
+        const mainCard = document.getElementById('mainCard');
 
+        envelopeBtn.addEventListener('click', () => {
+            // Animate envelope opening (flap flips up)
+            envelopeBtn.classList.add('open-flap');
+            
+            // Wait for flap to fully open, then zoom out the envelope
+            setTimeout(() => {
+                envelopeWrapper.style.opacity = '0';
+                envelopeWrapper.style.transform = 'scale(1.5)';
+                
+                // Show the main letter
+                setTimeout(() => {
+                    envelopeWrapper.style.display = 'none';
+                    mainCard.classList.add('show-card');
+                    shootConfetti();
+                }, 800);
+            }, 800);
+        });
+
+        // Create falling confetti
+        function shootConfetti() {
+            const colors = ['#f472b6', '#38bdf8', '#fbbf24', '#34d399', '#a78bfa'];
+            for(let i = 0; i < 70; i++) {
+                let confetti = document.createElement('div');
+                confetti.classList.add('confetti-piece');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 3 + 's'; // Faster initial drop
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                document.body.appendChild(confetti);
+            }
+        }
+    </script>
+<script src="magic-touch.js"></script>
+<script src="global-music.js"></script>
 </body>
 </html>
+
+
+
