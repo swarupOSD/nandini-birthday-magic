@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World's Best Sister - Memories</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            /* World's Best Sister Theme - Soft, elegant, beautiful pinks/purples */
+            background: linear-gradient(-45deg, #ff758c, #ff7eb3, #c56cd6, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Hearts / Orbs */
+        .orb {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(5px);
+            animation: floatUp var(--duration) ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .heading {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px #ff0844;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        .videos-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .video-wrapper {
+            flex: 1 1 280px;
+            max-width: 320px;
+            position: relative;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.4);
+            opacity: 0;
+            transform: scale(0.8);
+            aspect-ratio: 9/16;
+            transition: all 0.5s ease;
+        }
+
+        /* Decorative Corners */
+        .video-wrapper::before, .video-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 30px; height: 30px;
+            border: 3px solid #fff;
+            border-radius: 5px;
+            pointer-events: none;
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .video-wrapper::before {
+            top: -10px; left: -10px;
+            border-right: none; border-bottom: none;
+        }
+
+        .video-wrapper::after {
+            bottom: -10px; right: -10px;
+            border-left: none; border-top: none;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: #000;
+        }
+
+        /* Locked State */
+        .locked {
+            filter: grayscale(100%) blur(3px);
+            pointer-events: none; /* disables clicking on the video */
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            z-index: 5;
+            font-size: 4rem;
+            color: #fff;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            text-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .locked-wrapper .lock-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .locked-wrapper .lock-overlay p {
+            font-size: 1.2rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .next-btn {
+            margin-top: 50px;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .next-btn.locked-btn {
+            background: rgba(100, 100, 100, 0.5);
+            border-color: rgba(150, 150, 150, 0.5);
+            cursor: not-allowed;
+            color: #ccc;
+        }
+
+        .next-btn.unlocked-btn {
+            background: linear-gradient(45deg, #ff0844, #ffb199);
+            border: none;
+            box-shadow: 0 0 20px #ff0844;
+            animation: pulseBtn 2s infinite alternate;
+        }
+
+        @keyframes pulseBtn {
+            0% { box-shadow: 0 0 20px #ff0844; transform: scale(1); }
+            100% { box-shadow: 0 0 40px #ffb199, 0 0 60px #ff0844; transform: scale(1.05); }
+        }
+
+        .next-btn.unlocked-btn:hover {
+            transform: scale(1.1) !important;
+        }
+
+        /* Custom Alert */
+        .custom-alert {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            color: #333;
+            z-index: 100;
+            width: 90%;
+            max-width: 400px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .custom-alert.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .custom-alert h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #ff0844;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .custom-alert p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .custom-alert button {
+            padding: 10px 25px;
+            background: #ff0844;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .custom-alert button:hover {
+            background: #d40035;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .overlay.show { opacity: 1; visibility: visible; }
+
+        @media (max-width: 600px) {
+            .heading { font-size: 2.8rem; margin-bottom: 20px; }
+            .video-wrapper { max-width: 250px; }
+            .videos-grid { gap: 20px; }
+            body { padding: 20px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Orbs Background -->
+    <script>
+        for(let i=0; i<30; i++) {
+            let orb = document.createElement('div');
+            orb.className = 'orb';
+            let size = Math.random() * 20 + 10;
+            orb.style.width = size + 'px';
+            orb.style.height = size + 'px';
+            orb.style.left = Math.random() * 100 + 'vw';
+            orb.style.setProperty('--duration', (Math.random() * 5 + 5) + 's');
+            orb.style.animationDelay = (Math.random() * 5) + 's';
+            document.body.appendChild(orb);
+        }
+    </script>
+
+    <div class="container">
+        <h1 class="heading">For The World's Best Sister 👑</h1>
+        
+        <div class="videos-grid">
+            <!-- Video 1 (Unlocked) -->
+            <div class="video-wrapper" id="wrapper1">
+                <video class="myVideo" id="vid1" controls playsinline preload="metadata">
+                    <source src="video1.mp4" type="video/mp4">
+                </video>
+            </div>
+            
+            <!-- Video 2 (Locked Initially) -->
+            <div class="video-wrapper locked-wrapper" id="wrapper2">
+                <div class="lock-overlay">
+                    🔒
+                    <p>Watch Video 1 First!</p>
+                </div>
+                <video class="myVideo locked" id="vid2" controls playsinline preload="metadata">
+                    <source src="video2.mp4" type="video/mp4">
+                </video>
+            </div>
+            
+            <!-- Video 3 (Locked Initially) -->
+            <div class="video-wrapper locked-wrapper" id="wrapper3">
+                <div class="lock-overlay">
+                    🔒
+                    <p>Watch Video 2 First!</p>
+                </div>
+                <video class="myVideo locked" id="vid3" controls playsinline preload="metadata">
+                    <source src="video3.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <button class="next-btn locked-btn" id="nextBtn" onclick="handleNextClick()">
+            🔒 Play a Game!
+        </button>
+    </div>
+
+    <!-- Custom Alert -->
+    <div class="overlay" id="overlay"></div>
+    <div class="custom-alert" id="customAlert">
+        <h2>Hey! 🥺</h2>
+        <p id="alertMsg">Please watch all 3 videos completely before going to the next surprise!</p>
+        <button onclick="closeAlert()">Okay</button>
+    </div>
+
+    <script>
+        const vid1 = document.getElementById('vid1');
+        const vid2 = document.getElementById('vid2');
+        const vid3 = document.getElementById('vid3');
+        const wrapper2 = document.getElementById('wrapper2');
+        const wrapper3 = document.getElementById('wrapper3');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        let unlockedLevels = 1; // 1 means only vid1 is open
+
+        // Smooth reveal animations on load
+        window.onload = () => {
+            const tl = gsap.timeline();
+            tl.to('.heading', { opacity: 1, y: 0, duration: 1, ease: 'back.out(1.5)' })
+              .to('.video-wrapper', { opacity: 1, scale: 1, duration: 0.8, stagger: 0.2, ease: 'back.out(1.2)' }, "-=0.5")
+              .to('.next-btn', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, "-=0.2");
+
+            setupVideoEvents();
+        };
+
+        function setupVideoEvents() {
+            const videos = [vid1, vid2, vid3];
+            let playingVideos = 0;
+            
+            videos.forEach((video, index) => {
+                video.addEventListener('play', () => {
+                    playingVideos++;
+                    window.isVideoPlaying = true;
+                    if(window.globalAudio && !window.globalAudio.paused) window.globalAudio.pause();
+                    
+                    // pause others
+                    videos.forEach(v => {
+                        if(v !== video && !v.paused) v.pause();
+                    });
+                });
+                
+                video.addEventListener('pause', () => {
+                    playingVideos--;
+                    if(playingVideos <= 0 && window.globalAudio) {
+                        window.isVideoPlaying = false;
+                        window.globalAudio.play();
+                        playingVideos = 0;
+                    }
+                });
+            });
+
+            // Tracking Completion!
+            vid1.addEventListener('ended', () => {
+                if(unlockedLevels < 2) {
+                    unlockedLevels = 2;
+                    // Unlock Vid 2
+                    wrapper2.classList.remove('locked-wrapper');
+                    vid2.classList.remove('locked');
+                    // Add small bounce effect to indicate unlock
+                    gsap.fromTo(wrapper2, {scale: 0.9}, {scale: 1, duration: 0.5, ease: 'elastic.out(1,0.5)'});
+                }
+            });
+
+            vid2.addEventListener('ended', () => {
+                if(unlockedLevels < 3) {
+                    unlockedLevels = 3;
+                    // Unlock Vid 3
+                    wrapper3.classList.remove('locked-wrapper');
+                    vid3.classList.remove('locked');
+                    gsap.fromTo(wrapper3, {scale: 0.9}, {scale: 1, duration: 0.5, ease: 'elastic.out(1,0.5)'});
+                }
+            });
+
+            vid3.addEventListener('ended', () => {
+                if(unlockedLevels < 4) {
+                    unlockedLevels = 4; // All unlocked!
+                    nextBtn.classList.remove('locked-btn');
+                    nextBtn.classList.add('unlocked-btn');
+                    nextBtn.innerHTML = '✨ Play a Game! 🎮';
+                }
+            });
+        }
+
+        function handleNextClick() {
+            if(unlockedLevels < 4) {
+                // Show Custom Alert
+                document.getElementById('overlay').classList.add('show');
+                document.getElementById('customAlert').classList.add('show');
+            } else {
+                // Proceed
+                location.href = 'game.html';
+            }
+        }
+
+        function closeAlert() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('customAlert').classList.remove('show');
+        }
+    </script>
+    <script src="magic-touch.js"></script>
+    <script src="global-music.js"></script>
+</body>
+</html>
+
+
+

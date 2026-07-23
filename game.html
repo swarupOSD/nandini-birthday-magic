@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Balloon Pop Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #ff0844, #ffb199, #ff7eb3, #ff758c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Golden Sparkles */
+        .sparkle {
+            position: absolute;
+            background: radial-gradient(circle, #fff 0%, #fcf6ba 50%, transparent 100%);
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 15px #fcf6ba; }
+        }
+
+        /* Giant Bold UI */
+        #score-board {
+            position: absolute;
+            top: 4vh;
+            left: 5vw;
+            font-size: 3rem;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            z-index: 10;
+            transition: all 0.2s;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        #score-board.pulse {
+            transform: scale(1.3);
+            filter: drop-shadow(0 0 20px rgba(252, 246, 186, 0.8));
+        }
+
+        #instruction {
+            position: absolute;
+            top: 4vh;
+            right: 5vw;
+            width: 40vw;
+            text-align: right;
+            color: #fff;
+            font-size: 1.8rem;
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+            z-index: 10;
+            pointer-events: none;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        /* Vibrant High-Def Balloons */
+        .balloon {
+            position: absolute;
+            bottom: -200px;
+            width: 100px;
+            height: 130px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            cursor: crosshair;
+            z-index: 5;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.4);
+            transition: transform 0.1s;
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            width: 3px;
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.9), transparent);
+            transform: translateX(-50%);
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 12px solid inherit;
+        }
+
+        .balloon:active {
+            transform: scale(0.9);
+        }
+
+        /* Particle Canvas */
+        #particleCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        /* Huge Success Button */
+        #next-btn {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
+            border: none;
+            border-radius: 60px;
+            color: #4a0000;
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 10px 30px rgba(191, 149, 63, 0.5);
+            display: none;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-10deg); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        #next-btn:hover {
+            transform: translate(-50%, -50%) scale(1.05) rotate(2deg);
+            box-shadow: 0 15px 40px rgba(191, 149, 63, 0.8);
+            background: linear-gradient(to right, #fcf6ba, #bf953f, #fcf6ba);
+        }
+
+        #win-text {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            display: none;
+            z-index: 20;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            #score-board {
+                font-size: 2.5rem;
+                top: 2vh;
+                left: 20px;
+            }
+            #instruction {
+                font-size: 1.5rem;
+                top: 3vh;
+                right: 20px;
+                width: 50vw;
+            }
+            .balloon {
+                width: 80px;
+                height: 100px;
+            }
+            #next-btn {
+                font-size: 1rem;
+                padding: 15px 30px;
+                width: 85%;
+                text-align: center;
+            }
+            #win-text {
+                font-size: 3rem;
+                top: 38%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="particleCanvas"></canvas>
+
+    <div id="score-board">0 / 10</div>
+    <div id="instruction">Pop 10 Balloons<br>To Unlock! ✨</div>
+
+    <div id="win-text">You Did It! 🎉</div>
+    <button id="next-btn" onclick="window.location.href='final.html'">Reveal Final Surprise 💖</button>
+
+    <script>
+        // Create Golden Background Sparkles
+        for(let i = 0; i < 40; i++) {
+            let sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            sparkle.style.width = Math.random() * 4 + 2 + 'px';
+            sparkle.style.height = sparkle.style.width;
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            sparkle.style.animationDuration = Math.random() * 2 + 2 + 's';
+            document.body.appendChild(sparkle);
+        }
+
+        let score = 0;
+        const targetScore = 10;
+        // Premium balloon colors (ruby, rose gold, gold, white)
+        const colors = ['#ff0844', '#ffb199', '#fcf6ba', '#bf953f', '#ff758c', '#ffffff'];
+        let gameActive = true;
+        let spawnInterval;
+
+        const scoreBoard = document.getElementById('score-board');
+        
+        // Canvas Setup for Particles
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.size = Math.random() * 8 + 4;
+                this.speedX = Math.random() * 20 - 10;
+                this.speedY = Math.random() * 20 - 10;
+                this.life = 1;
+                this.decay = Math.random() * 0.05 + 0.02;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= this.decay;
+                this.size *= 0.95;
+            }
+            draw() {
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0 || particles[i].size <= 0.5) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        function createExplosion(x, y, color) {
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function createBalloon() {
+            if (!gameActive) return;
+
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            // Make the balloon look premium and glossy
+            balloon.style.background = `radial-gradient(circle at 30% 30%, #fff 5%, ${color} 60%, ${color} 90%)`;
+            balloon.style.borderBottomColor = color; 
+
+            // Spawn at random horizontal
+            const left = Math.random() * (window.innerWidth - 100);
+            balloon.style.left = left + 'px';
+            document.body.appendChild(balloon);
+
+            // Slower float so they can be clicked
+            const duration = Math.random() * 3000 + 3500; // 3.5 to 6.5 seconds
+            const animation = balloon.animate([
+                { transform: 'translateY(0) rotate(0deg)' },
+                { transform: `translateY(-${window.innerHeight + 250}px) rotate(${Math.random()*40-20}deg)` }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+            });
+
+            animation.onfinish = () => {
+                if(balloon.parentNode) balloon.remove();
+            };
+
+            const popBalloon = (e) => {
+                if (!gameActive) return;
+                if(e.type === 'touchstart') e.preventDefault();
+
+                const rect = balloon.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                createExplosion(centerX, centerY, color);
+                balloon.remove();
+
+                score++;
+                scoreBoard.innerText = `${score} / ${targetScore}`;
+                scoreBoard.classList.remove('pulse');
+                void scoreBoard.offsetWidth; // trigger reflow
+                scoreBoard.classList.add('pulse');
+
+                if (score >= targetScore) {
+                    winGame();
+                }
+            };
+
+            balloon.addEventListener('click', popBalloon);
+            balloon.addEventListener('touchstart', popBalloon, { passive: false });
+        }
+
+        function winGame() {
+            gameActive = false;
+            clearInterval(spawnInterval);
+            document.querySelectorAll('.balloon').forEach(b => {
+                const rect = b.getBoundingClientRect();
+                createExplosion(rect.left + rect.width/2, rect.top + rect.height/2, b.style.borderBottomColor);
+                b.remove();
+            });
+            
+            document.getElementById('instruction').style.display = 'none';
+            document.getElementById('score-board').style.display = 'none';
+            
+            document.getElementById('win-text').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('next-btn').style.display = 'block';
+            }, 800);
+        }
+
+        // Spawn balloons at a reasonable speed
+        spawnInterval = setInterval(createBalloon, 900);
+    </script>
+<script src="magic-touch.js"></script>
+<script src="global-music.js"></script>
+</body>
+</html>
+
+

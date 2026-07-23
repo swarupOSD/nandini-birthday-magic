@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Album</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #ff0844, #ffb199, #ff7eb3, #ff758c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Golden Sparkles */
+        .sparkle {
+            position: absolute;
+            background: radial-gradient(circle, #fff 0%, #fcf6ba 50%, transparent 100%);
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 15px #fcf6ba; }
+        }
+
+        .title {
+            position: absolute;
+            top: 6vh;
+            font-size: 4rem;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            z-index: 10;
+            text-align: center;
+            line-height: 1.2;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+            animation: pulseText 2s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+            50% { filter: drop-shadow(0 10px 15px rgba(255,255,255,0.4)); }
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 320px;
+            height: 450px;
+            perspective: 1200px;
+            z-index: 5;
+            margin-top: 80px;
+            cursor: grab;
+        }
+        
+        .carousel-container:active {
+            cursor: grabbing;
+        }
+
+        .carousel {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        .card {
+            position: absolute;
+            width: 320px;
+            height: 450px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), inset 0 0 0 2px rgba(255, 255, 255, 0.3);
+            transition: filter 0.3s, transform 0.3s;
+        }
+
+        .card:hover {
+            filter: brightness(1.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            object-position: center 15%;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.03);
+        }
+
+        .card p {
+            font-family: 'Dancing Script', cursive;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fcf6ba);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        }
+
+        .next-btn {
+            position: absolute;
+            bottom: 6vh;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
+            border: none;
+            border-radius: 50px;
+            color: #4a0000;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(191, 149, 63, 0.5);
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(191, 149, 63, 0.8);
+            background: linear-gradient(to right, #fcf6ba, #bf953f, #fcf6ba);
+        }
+        
+        @media (max-width: 768px) {
+            .carousel-container {
+                width: 250px;
+                height: 360px;
+                margin-top: 60px;
+            }
+            .card {
+                width: 250px;
+                height: 360px;
+                padding: 12px;
+            }
+            .card img {
+                height: 240px;
+            }
+            .title {
+                font-size: 3rem;
+                top: 4vh;
+            }
+            .card p {
+                font-size: 0.95rem;
+                margin-top: 20px;
+            }
+            .next-btn {
+                font-size: 1rem;
+                padding: 12px 30px;
+                bottom: 4vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="title">Sweet Memories ❤️</h1>
+
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <!-- Cards injected by JS -->
+        </div>
+    </div>
+
+    <button class="next-btn" onclick="location.href='video.html'">Unlock Next Magic ✨</button>
+
+    <script>
+        // Create Golden Background Sparkles
+        for(let i = 0; i < 40; i++) {
+            let sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            sparkle.style.width = Math.random() * 4 + 2 + 'px';
+            sparkle.style.height = sparkle.style.width;
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            sparkle.style.animationDuration = Math.random() * 2 + 2 + 's';
+            document.body.appendChild(sparkle);
+        }
+
+        const albumData = [
+            { src: 'pic1.jpeg', text: 'Sarajibon emni e hasikhusi thako' },
+            { src: 'pic2.jpeg', text: 'Sob theke best sister' },
+            { src: 'pic3.jpeg', text: 'Tomar paglami gulo valo lage' },
+            { src: 'pic4.jpeg', text: 'Always be happy!' },
+            { src: 'pic5.jpeg', text: 'Stay beautiful' },
+            { src: 'pic6.jpeg', text: 'Lots of love' }
+        ];
+
+        const carousel = document.getElementById('carousel');
+        const numCards = albumData.length;
+
+        function renderCarousel() {
+            carousel.innerHTML = '';
+            // Make the circle huge and immersive
+            const radius = window.innerWidth < 768 ? 220 : 350; 
+
+            albumData.forEach((item, index) => {
+                const angle = (360 / numCards) * index;
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+
+                const img = document.createElement('img');
+                img.src = item.src;
+                img.onerror = () => { img.src = `https://via.placeholder.com/300x400/222/fff?text=ADD+PIC+${index+1}` };
+
+                const p = document.createElement('p');
+                p.textContent = item.text;
+
+                card.appendChild(img);
+                card.appendChild(p);
+                carousel.appendChild(card);
+            });
+        }
+
+        renderCarousel();
+        window.addEventListener('resize', renderCarousel);
+
+        // Drag / Swipe Logic
+        let currentRotation = 0;
+        let isDragging = false;
+        let startX = 0;
+        const rotationSpeed = 0.4;
+        let autoRotateSpeed = 0.2; // Speed of normal rotation
+
+        function animate() {
+            if (!isDragging) {
+                currentRotation -= autoRotateSpeed; // Rotate automatically
+            }
+            carousel.style.transform = `rotateY(${currentRotation}deg)`;
+            requestAnimationFrame(animate);
+        }
+        animate(); // Start animation loop
+
+        const container = document.querySelector('.carousel-container');
+
+        // Mouse Events
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX;
+        });
+
+        window.addEventListener('mouseup', () => {
+            is /* Keep spinning smoothly when mouse is up */
+            isDragging = false;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.pageX - startX;
+            currentRotation += deltaX * rotationSpeed;
+            startX = e.pageX;
+        });
+
+        // Touch Events for Mobile
+        container.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].pageX;
+        });
+
+        window.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.touches[0].pageX - startX;
+            currentRotation += deltaX * rotationSpeed;
+            startX = e.touches[0].pageX;
+        });
+    </script>
+<script src="magic-touch.js"></script>
+<script src="global-music.js"></script>
+</body>
+</html>
+
+
+
+

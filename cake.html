@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magical Cake Celebration!</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
-            --neon-purple: #bc13fe;
-            --space-black: #0a0a1a;
-            --star-white: rgba(255, 255, 255, 0.8);
+            --pastel-pink: #ff9a9e;
+            --pastel-peach: #fecfef;
+            --pastel-blue: #a1c4fd;
+            --pastel-rose: #ff6a88;
         }
 
         * {
@@ -26,10 +26,44 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(45deg, var(--space-black) 60%, #2a0a4a);
-            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
             position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Light Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .orb-1 {
+            width: 300px; height: 300px;
+            background: rgba(255, 255, 255, 0.4);
+            top: 10%; left: 10%;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 400px; height: 400px;
+            background: rgba(255, 182, 193, 0.5);
+            bottom: 10%; right: 10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-50px) scale(1.1); }
         }
 
         .stars {
@@ -42,26 +76,27 @@
 
         .star {
             position: absolute;
-            background: var(--star-white);
+            background: white;
             border-radius: 50%;
             animation: twinkle 2s infinite;
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px white; }
         }
 
         .heading {
-            font-size: 4rem;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+            font-size: 4.5rem;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(45deg, #d13076, #ff6a88);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin-bottom: 2rem;
             text-align: center;
             animation: titleFloat 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px var(--neon-purple));
+            filter: drop-shadow(0 2px 4px rgba(255,255,255,0.7));
             position: relative;
             z-index: 2;
         }
@@ -77,7 +112,7 @@
             height: 350px;
             cursor: pointer;
             transition: transform 0.3s ease;
-            filter: drop-shadow(0 0 30px rgba(255, 113, 182, 0.5));
+            filter: drop-shadow(0 15px 25px rgba(255, 106, 136, 0.3));
         }
 
         .cake-container:hover {
@@ -95,72 +130,99 @@
         .layer {
             position: absolute;
             width: 100%;
-            border-radius: 15px;
-            box-shadow: 
-                0 0 30px var(--neon-pink),
-                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            border-radius: 50% / 20px; /* Makes it look cylindrical */
+            box-shadow: inset 0 5px 15px rgba(255, 255, 255, 0.5), 
+                        inset 0 -10px 20px rgba(0, 0, 0, 0.15), 
+                        0 10px 15px rgba(0,0,0,0.1);
             display: flex;
             justify-content: center;
             transition: all 0.3s ease;
         }
 
         .layer-1 {
-            height: 100px;
+            height: 110px;
             bottom: 0;
-            background: linear-gradient(45deg, #ff00ff, #bc13fe);
+            background: linear-gradient(to right, #d84574, #ff85a2, #d84574);
             z-index: 3;
         }
 
         .layer-2 {
-            height: 90px;
-            bottom: 90px;
+            height: 100px;
+            bottom: 95px;
             width: 85%;
             left: 7.5%;
-            background: linear-gradient(45deg, #bc13fe, #8a2be2);
+            background: linear-gradient(to right, #e25b86, #ffa1b9, #e25b86);
             z-index: 2;
         }
 
         .layer-3 {
-            height: 80px;
-            bottom: 170px;
+            height: 90px;
+            bottom: 180px;
             width: 70%;
             left: 15%;
-            background: linear-gradient(45deg, #8a2be2, #4b0082);
+            background: linear-gradient(to right, #eb7097, #ffbdd1, #eb7097);
             z-index: 1;
         }
 
         .frosting {
             position: absolute;
-            width: 25px;
+            width: 35px;
+            height: 50px;
+            background: linear-gradient(to bottom, #fff, #fdfbfb);
+            border-radius: 50px;
+            top: -20px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1), inset -3px -3px 5px rgba(0,0,0,0.05);
+            /* Creating an organic drip look */
+        }
+        
+        .frosting:nth-child(even) {
             height: 35px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
             top: -15px;
-            filter: drop-shadow(0 0 5px white);
         }
 
         .candle {
             position: absolute;
-            width: 25px;
-            height: 80px;
-            background: linear-gradient(to right, #fff, #ffd1e3);
-            top: -80px;
+            width: 20px;
+            height: 75px;
+            background: repeating-linear-gradient(
+                -45deg,
+                #fff,
+                #fff 10px,
+                #ff7eb3 10px,
+                #ff7eb3 20px
+            );
+            top: -75px;
             left: 50%;
             transform: translateX(-50%);
-            border-radius: 10px;
+            border-radius: 5px;
             z-index: 10;
-            filter: drop-shadow(0 0 10px white);
+            box-shadow: inset -3px 0 5px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .candle::before {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 12px;
+            background: #333;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
         }
 
         .flame {
             position: absolute;
             width: 25px;
-            height: 40px;
-            background: linear-gradient(to bottom, #ff9d00, #ff5e00);
+            height: 45px;
+            background: radial-gradient(ellipse at bottom, #fff 10%, #ffeb3b 40%, #ff9800 80%, rgba(255, 152, 0, 0) 100%);
             border-radius: 50% 50% 20% 20%;
-            top: -35px;
+            top: -55px;
+            left: -2.5px;
             animation: flameFloat 0.8s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px #ff9d00);
+            filter: drop-shadow(0 0 20px #ffeb3b);
+            opacity: 1;
         }
 
         @keyframes flameFloat {
@@ -170,17 +232,17 @@
 
         .glow-particle {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.6);
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 50%;
-            filter: blur(3px);
+            filter: blur(2px);
             animation: particleFloat 3s linear infinite;
         }
 
         @keyframes particleFloat {
             0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100px); opacity: 0; }
+            100% { transform: translateY(-80px); opacity: 0; }
         }
 
         .next-page-button {
@@ -188,52 +250,28 @@
             bottom: 40px;
             padding: 15px 40px;
             font-size: 1.2rem;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%);
             border: none;
-            border-radius: 30px;
+            border-radius: 50px;
             color: white;
             cursor: pointer;
             opacity: 0;
             transform: translateY(50px);
             transition: all 0.3s ease;
-            box-shadow: 
-                0 0 25px var(--neon-pink),
-                0 0 50px var(--neon-blue);
+            box-shadow: 0 10px 20px rgba(255, 117, 140, 0.4);
             z-index: 1000;
-            font-weight: bold;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .next-page-button:hover {
             transform: translateY(-5px);
-            box-shadow: 
-                0 0 35px var(--neon-pink),
-                0 0 70px var(--neon-blue);
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+            box-shadow: 0 15px 30px rgba(255, 117, 140, 0.6);
         }
 
-        .neon-border {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid var(--neon-pink);
-            border-radius: 15px;
-            box-shadow: 
-                inset 0 0 15px var(--neon-pink),
-                0 0 30px var(--neon-pink);
-            animation: borderPulse 2s infinite;
-        }
-
-        @keyframes borderPulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 0.3; }
-        }
-
-
-
- /* नया बटन CSS जोड़ें */
- .next-page-button.show {
+        .next-page-button.show {
             opacity: 1 !important;
             transform: translateY(0) !important;
             animation: buttonPulse 1.5s infinite;
@@ -241,47 +279,130 @@
 
         @keyframes buttonPulse {
             0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-5px) scale(1.1); }
+            50% { transform: translateY(-5px) scale(1.05); }
         }
 
+        @media (max-width: 600px) {
+            .heading { font-size: 3rem; }
+            .cake-container { width: 250px; height: 250px; margin-top: 30px; }
+            .layer-1 { height: 80px; }
+            .layer-2 { height: 70px; bottom: 80px; }
+            .layer-3 { height: 60px; bottom: 150px; }
+            .candle { height: 60px; top: -60px; }
+        }
+
+        /* Floating Gallery */
+        .floating-gallery {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .polaroid {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 12px 35px 12px;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            animation: floatPolaroid 8s ease-in-out infinite alternate;
+            pointer-events: auto;
+        }
+
+        .polaroid img, .polaroid video {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            object-position: center 15%;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(0,0,0,0.05);
+        }
+
+        .p1 { top: 12%; left: 6%; --rot: -12deg; animation-delay: 0s; }
+        .p2 { top: 60%; left: 10%; --rot: 8deg; animation-delay: -3s; }
+        .p3 { top: 15%; right: 6%; --rot: 10deg; animation-delay: -1s; }
+        .p4 { top: 58%; right: 9%; --rot: -6deg; animation-delay: -4s; }
+
+        @keyframes floatPolaroid {
+            0% { transform: translateY(0) rotate(var(--rot)); }
+            100% { transform: translateY(-30px) rotate(var(--rot)); }
+        }
+
+        @media (max-width: 900px) {
+            .polaroid { transform: scale(0.8); }
+        }
+        @media (max-width: 600px) {
+            /* Hide lower polaroids on mobile, make top ones smaller */
+            /* .p2, .p4 hidden removed */
+            .polaroid { padding: 8px 8px 25px 8px; opacity: 0.6; }
+            .polaroid img, .polaroid video { width: 100px; height: 100px; }
+            .p1 { top: 5%; left: 2%; --rot: -15deg; }
+            .p3 { top: 5%; right: 2%; --rot: 15deg; }
+        }
     </style>
 </head>
 <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
     <div class="stars"></div>
-    <h1 class="heading">Magical Cake Time! ✨</h1>
+    
+    <!-- Floating Gallery for Photos and Videos -->
+    <div class="floating-gallery">
+        <div class="polaroid p1">
+            <img src="cake1.jpeg" alt="Photo 1" onerror="this.src='https://via.placeholder.com/160?text=Your+Photo'">
+        </div>
+        <div class="polaroid p2">
+            <img src="cake2.jpeg" alt="Photo 2" onerror="this.src='https://via.placeholder.com/160?text=Your+Photo'">
+        </div>
+        <div class="polaroid p3">
+            <img src="cake3.jpeg" alt="Photo 3" onerror="this.src='https://via.placeholder.com/160?text=Your+Photo'">
+        </div>
+        <div class="polaroid p4">
+            <img src="pic1.jpeg" alt="Photo 4" onerror="this.src='https://via.placeholder.com/160?text=Your+Photo'">
+        </div>
+    </div>
+
+    <h1 class="heading">A Sweet Cake For You 🎂</h1>
     <div class="cake-container">
         <div class="cake">
-            <div class="neon-border"></div>
             <div class="layer layer-1">
-                <div class="frosting"></div>
-                <div class="frosting" style="left: 50px"></div>
-                <div class="frosting" style="right: 50px"></div>
+                <div class="frosting" style="left: 10%"></div>
+                <div class="frosting" style="left: 30%"></div>
+                <div class="frosting" style="left: 50%"></div>
+                <div class="frosting" style="left: 70%"></div>
+                <div class="frosting" style="left: 90%"></div>
             </div>
             <div class="layer layer-2">
-                <div class="frosting"></div>
-                <div class="frosting" style="left: 45px"></div>
-                <div class="frosting" style="right: 45px"></div>
+                <div class="frosting" style="left: 15%"></div>
+                <div class="frosting" style="left: 45%"></div>
+                <div class="frosting" style="left: 75%"></div>
             </div>
             <div class="layer layer-3">
-                <div class="frosting"></div>
-                <div class="frosting" style="left: 40px"></div>
-                <div class="frosting" style="right: 40px"></div>
+                <div class="frosting" style="left: 20%"></div>
+                <div class="frosting" style="left: 50%"></div>
+                <div class="frosting" style="left: 80%"></div>
                 <div class="candle">
                     <div class="flame"></div>
                 </div>
             </div>
         </div>
     </div>
-    <button class="next-page-button">Begin Magic →</button>
+    <button class="next-page-button">Blow the Candle 🌬️</button>
 
     <script>
-        // Create stars background
         function createStars() {
             const container = document.querySelector('.stars');
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 100; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
-                star.style.width = `${Math.random() * 3}px`;
+                star.style.width = `${Math.random() * 4}px`;
                 star.style.height = star.style.width;
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
@@ -290,7 +411,6 @@
             }
         }
 
-        // Create floating particles
         function createParticles() {
             const flame = document.querySelector('.flame');
             setInterval(() => {
@@ -299,46 +419,63 @@
                 particle.style.left = `${Math.random() * 20 - 10}px`;
                 flame.appendChild(particle);
                 setTimeout(() => particle.remove(), 3000);
-            }, 300);
+            }, 400);
         }
 
-        // Initialize animations
-        createStars();
-        createParticles();
-
-
-         // अपडेट किया हुआ JavaScript
-         document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const cake = document.querySelector('.cake-container');
             const nextButton = document.querySelector('.next-page-button');
             let celebrationStarted = false;
 
-            // केक पर क्लिक करने का इवेंट
             cake.addEventListener('click', () => {
                 if(celebrationStarted) return;
                 celebrationStarted = true;
 
-                // बटन दिखाएं
+                // Animate flame growing slightly
+                gsap.to('.flame', { scale: 1.5, duration: 1, ease: 'elastic.out(1, 0.3)' });
+
                 setTimeout(() => {
                     nextButton.classList.add('show');
-                }, 2000);
-
-                // एनिमेशन लॉजिक यहाँ जोड़ें
+                }, 1000);
             });
 
-            // बटन क्लिक हेंडलर
             nextButton.addEventListener('click', () => {
-                window.location.href = 'birthday-main.html';
+                // Lower BGM volume
+                if(window.setBGMVolume) window.setBGMVolume(0.2);
+
+                // Play cheer/happy birthday sound loud!
+                let cheerSound = window.cheerAudio;
+                if(!cheerSound) {
+                   cheerSound = new Audio('cheer.mp3');
+                   window.cheerAudio = cheerSound;
+                }
+                cheerSound.volume = 1.0;
+                cheerSound.play().catch(e => console.log('Cheer audio failed'));
+
+                setInterval(() => {
+                    sessionStorage.setItem('cheerMusicTime', cheerSound.currentTime);
+                    sessionStorage.setItem('cheerMusicPlaying', 'true');
+                }, 100);
+
+                // Blow out the candle flame!
+                gsap.to('.flame', { opacity: 0, scale: 0, duration: 0.3 });
+                
+                nextButton.innerText = "Yayyy! 🎉";
+                
+                setTimeout(() => {
+                    window.location.href = 'birthday-main.html';
+                }, 3000); 
             });
 
-            // स्टार्स और पार्टिकल्स इनिशियलाइज़ करें
             createStars();
             createParticles();
         });
-
-
-        // Rest of your existing JavaScript code with GSAP animations...
-        // (Keep the original JavaScript functionality and add new enhancements)
     </script>
+<script src="magic-touch.js"></script>
+<script src="global-music.js"></script>
 </body>
 </html>
+
+
+
+
